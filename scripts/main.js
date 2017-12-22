@@ -13,7 +13,7 @@
 
 const settings = {
 
-	version: 20171222.0913,
+	version: 20171222.1514,
 	verbosity: 1.0,
 	
 
@@ -730,13 +730,14 @@ M.tasks.updates.add( Mode.run )
 
 
 
-console.log(
-
+const help = 
 	'\nSPACE ROCKS'+
 	'\n'+ settings.version +'\n'+
-	'\nMode.current'+
-	'\nMode.all'+
-	'\nM.tasks.setups.inspect()'+
-	'\nM.tasks.updates.inspect()'+
-	'\nTHREE.VRController.inspect()'
-)
+	'\nHi! Here are some commands you might find interesting:\n'+
+	'\n  Mode.current'+
+	'\n  Mode.all'+
+	'\n  M.tasks.setups.inspect()'+
+	'\n  M.tasks.updates.inspect()'+
+	'\n  THREE.VRController.inspect()'+
+	'\n\n'
+console.log( help )
