@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Space Rocks (WebVR)</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport"             content="width=device-width,initial-scale=1.0">
+		<meta name="description"          content="Escape through space on stolen plasma engines while slinging photon bolts at deadly asteroids.">
+		<meta name="copyright"            content="Moar Technologies Corp 2017 http://moar.io">
+		<meta name="keywords"             content="
+			Virtual Reality, VR, Augmented Reality, AR, Mixed Reality, MR, XR,
+			WebVR, WebXR, WebGL, Canvas, HTML5, SVG, JavaScript, GPU, shader,
+			Mozilla Firefox, Firefox, Google Chrome, Chrome, Webkit, Blink, Chromium, Microsoft Edge, Edge
+			Three, Three.js, VRController, TaskList,
+			Oculus, Oculus Rift, Oculus Touch, HTC Vive, Steam, SteamVR, Windows Mixed Reality,
+			Atari, Asteroids, Tempest, video game, retro,
+			Moar Technologies Corp, Moar, Stewart Smith, Stewart,
+			Brooklyn, NY, NYC, New York, New York City">
+
+		<meta name="twitter:card"         content="summary">
+		<meta name="twitter:site"         content="@moar_tech">
+		<meta name="twitter:creator"      content="@moar_tech">
+		<meta name="twitter:description"  content="Escape through space on stolen plasma engines while slinging photon bolts at deadly asteroids.">
+		<meta name="twitter:title"        content="Space Rocks (WebVR)">
+		<meta name="twitter:image"        content="https://spacerocks.moar.io/media/space-rocks.jpg">
+		<meta name="twitter:url"          content="https://spacerocks.moar.io">
+		
+		<meta property="og:type"          content="website">
+		<meta property="og:description"   content="Escape through space on stolen plasma engines while slinging photon bolts at deadly asteroids.">
+		<meta property="og:title"         content="Space Rocks (WebVR)">
+		<meta property="og:image"         content="https://spacerocks.moar.io/media/space-rocks.jpg">
+		<meta property="og:url"           content="https://spacerocks.moar.io">
+
+ 		<link rel="canonical"             href="https://spacerocks.moar.io">
+		<link rel="icon" type="image/png" href="media/favicon-064.png">
+		<link rel="apple-touch-icon"      href="media/favicon-144.png">
+		<link rel="stylesheet"            href="styles/base.css" type="text/css">
+
+
+		<!--  Analytics  -->
+
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-86306006-3"></script>
+		<script>
+			window.dataLayer = window.dataLayer || []
+			function gtag(){ dataLayer.push( arguments )}
+			gtag( 'js', new Date() )
+			gtag( 'config', 'UA-86306006-3' )
+		</script>
+
+
+		<!--  Third-Party  -->
+
+		<script src="scripts/third-party/three.min.js"></script>
+		<script src="scripts/third-party/VRController.js"></script>
+		<script src="scripts/third-party/TaskLists.js"></script>
+		<script src="scripts/third-party/Mode.js"></script>
+		
+
+		<!--  Moar  -->
+
+		<script src="scripts/moar/tasks.js"></script>
+		<script src="scripts/moar/detect.js"></script>
+		<script src="scripts/moar/utils.js"></script>
+		<script src="scripts/moar/three.js"></script>
+
+
+		<!--  Space Rocks  -->
+	
+		<script src="scripts/main.js"></script>
+		<script src="scripts/Quicktext.js"></script>
+		<script src="scripts/Rock.js"></script>
+		<script src="scripts/Bolt.js"></script>
+		<script src="scripts/Explosion.js"></script>
+		<script src="scripts/Button.js"></script>
+		<script src="scripts/Jumbotron.js"></script>
+		<script src="scripts/player.js"></script>
+
+
+	</head>
+	<body>
+		<div id="three"></div>
+		<div id="three-ui">
+			<div id="underline">
+				<svg class="svg-symbol" role="img" title="Space Rocks">
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#space-rocks-underline"></use>
+				</svg>
+			</div>
+			<div id="errors">
+				<svg class="svg-symbol" role="img" title="Error">
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#error"></use>
+				</svg>
+				<strong>
+					Slow down, Space Pirate!
+					Before you can blast asteroids out of orbit you need to:
+				</strong>
+				<div id="no-webgl">
+					Upgrade to a Web browser that supports 
+					<a  target="_blank" href="https://en.wikipedia.org/wiki/WebGL">WebGL</a>,
+					like the latest version of 
+					<a target="_blank" href="https://www.mozilla.org/firefox/">Firefox</a>,
+					<a target="_blank" href="https://webvr.rocks/chromium">Chromium</a>, or
+					<!-- <a target="_blank" href="https://www.google.com/chrome/">Chrome</a>, or -->
+					<a target="_blank" href="https://www.microsoft.com/windows/microsoft-edge">Edge</a>.
+				</div>
+				<div id="no-webvr">
+					Upgrade to a Web browser that supports
+					the <a  target="_blank" href="https://en.wikipedia.org/wiki/WebVR">WebVR API</a>,
+					like the latest version of 
+					<a target="_blank" href="https://www.mozilla.org/firefox/">Firefox</a>,
+					<a target="_blank" href="https://webvr.rocks/chromium">Chromium</a>, or
+					<!-- <a target="_blank" href="https://www.google.com/chrome/">Chrome</a>, or -->
+					<a target="_blank" href="https://www.microsoft.com/windows/microsoft-edge">Edge</a>.
+				</div>
+				<div id="no-hmd">
+					Attach a virtual reality headset to your computer,
+					such as an
+					<a target="_blank" href="https://www.oculus.com/rift/">Oculus Rift</a>,
+					<a target="_blank" href="https://www.vive.com/">HTC Vive</a>, or
+					<a target="_blank" href="https://www.microsoft.com/en-us/windows/windows-mixed-reality">Windows Mixed Reality</a> device.
+				</div>
+				<div id="no-6dof">
+					Upgrade to a virtual reality headset that tracks both position and orientation,
+					such as an
+					<a target="_blank" href="https://www.oculus.com/rift/">Oculus Rift</a>,
+					<a target="_blank" href="https://www.vive.com/">HTC Vive</a>, or
+					<a target="_blank" href="https://www.microsoft.com/en-us/windows/windows-mixed-reality">Windows Mixed Reality</a> device.
+				</div>
+			</div>
+			
+
+			<div id="high-score">High score: <span id="high-score-number">0</span></div>
+			<div id="vr-toggle-container">
+				<div id="vr-toggle-off">
+					Enter VR
+				</div>
+				<div id="vr-toggle-on">
+					<svg class="svg-symbol" role="img">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#moar-mark"></use>
+					</svg>
+					<p>Put on headset</p>
+				</div>
+			</div>
+		</div>
+		
+
+
+
+		<div id="scroller" >
+			<div id="column-1" class="column">
+				<section id="about" class="anchor" label="About" hash="about">
+					<strong>Escape through space on stolen plasma engines while slinging photon bolts at deadly asteroids.</strong>
+					How many can you blow apart? 
+					Put on your virtual reality headset and pick up your hand controllers. 
+					You’ll need them if you want to survive.
+				</section>
+				<section id="instructions" class="anchor" label="Instructions" hash="instructions">
+					<h2>Instructions</h2>
+					<div class="illustration">
+						<svg id="trigger-released" class="svg-symbol" role="img" title="Oculus Touch trigger released">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#trigger-released"></use>
+						</svg>
+						<svg id="trigger-pressed" class="svg-symbol" role="img" title="Oculus Touch trigger pressed">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#trigger-pressed"></use>
+						</svg>
+						<svg class="svg-symbol" role="img" title="Oculus Touch trigger">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#trigger-base"></use>
+						</svg>
+					</div>
+					<p>
+						Pull your trigger to sling photon bolts. 
+						And watch out for that accumulated recoil.
+					</p>
+					<div class="illustration">
+						<svg class="svg-symbol" role="img" title="Oculus Touch grip">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#grip-base"></use>
+						</svg>
+						<svg id="grip-released" class="svg-symbol" role="img" title="Oculus Touch grip released">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#grip-released"></use>
+						</svg>
+						<svg id="grip-pressed" class="svg-symbol" role="img" title="Oculus Touch grip pressed">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#grip-pressed"></use>
+						</svg>
+					</div>
+					<p>
+						Press your side grips to rev your plasma engines. 
+						Careful: you may be going faster than you think.
+						(And slowing down takes some talent.)
+					</p>
+				</section>
+			</div>
+			
+
+			<div id="column-2" class="column">
+				<section id="requirements" class="anchor" label="Requirements" hash="requirements">
+					<h2>Requirements</h2>
+					You’ll need a position-tracking virtual reality rig with two hand controllers,
+					and a WebVR-capable browser.
+					Right now in 2017 the most expensive part is the computer needed to run a room-scale VR rig,
+					but take heart—by 2022 all of this hardware will be much cheaper.
+					And the Web will still be free.
+					In the meantime here’s what Space Rocks is tuned to run on:
+					<table id="compatability-table">
+						<tr>
+							<td>&nbsp;</td>
+							<td><a target="_blank" href="https://www.oculus.com/rift/">
+								<svg class="svg-symbol" role="img" title="Oculus Rift">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#oculus"></use>
+								</svg><br>
+								Oculus
+							</a></td>
+							<td><a target="_blank" href="https://www.vive.com/">
+								<svg class="svg-symbol" role="img" title="HTC Vive">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#vive"></use>
+								</svg><br>
+								Vive
+							</a></td>
+							<td><a target="_blank" href="https://www.microsoft.com/en-us/windows/windows-mixed-reality">
+								<svg class="svg-symbol" role="img" title="Windows Mixed Reality">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#windows-mixed-reality"></use>
+								</svg><br>
+								Win&nbsp;MR
+							</a></td>
+						</tr>
+						<tr>
+							<td><a target="_blank" href="https://www.mozilla.org/firefox/">
+								
+								<svg class="svg-symbol" role="img" title="Mozilla Firefox">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#firefox"></use>
+								</svg><br>
+								Firefox
+							</a></td>
+							<td>
+								<svg class="svg-symbol" role="img" title="Checkmark">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#checkmark"></use>
+								</svg>
+							</td>
+							<td>
+								<svg class="svg-symbol" role="img" title="Checkmark">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#checkmark"></use>
+								</svg>
+							</td>
+							<td>×</td>
+						</tr>
+						<tr>
+							<td><a target="_blank" href="https://www.google.com/chrome/browser/canary.html">
+								<svg class="svg-symbol" role="img" title="Google Chrome">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#chrome"></use>
+								</svg><br>
+								Chrome
+							</a></td>
+							<td>×</td>
+							<td>
+								<svg class="svg-symbol" role="img" title="Checkmark">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#checkmark"></use>
+								</svg>
+							</td>
+							<td>×</td>
+						</tr>
+						<tr>
+							<td><a target="_blank" href="https://www.microsoft.com/windows/microsoft-edge">
+								<svg class="svg-symbol" role="img" title="Microsoft Edge">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#edge"></use>
+								</svg><br>
+								Edge
+							</a></td>
+							<td>×</td>
+							<td>×</td>
+							<td>
+								<svg class="svg-symbol" role="img" title="Checkmark">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#checkmark"></use>
+								</svg>
+							</td>
+						</tr>
+					</table>
+				</section>
+				<section id="colophon" class="anchor" label="Colophon" hash="colophon">
+					<h2>Colophon</h2>
+					<p>
+						Space Rocks is a WebVR experiment created by me, 
+						<a target="_blank" href="http://stewartsmith.io">Stewart Smith</a>,
+						and brought to you by <a target="_blank" href="https://moar.io">Moar Technologies Corp</a>,
+						a consultancy for emerging technology and strategy in Brooklyn, New York. 
+						Built with <a target="_blank" href="https://github.com/stewdio/THREE.VRController">VRController</a> for Three.js.					
+						Display typeface: <a target="_blank" href="https://www.myfonts.com/fonts/sentinel/big-noodle-titling/">Big Noodle Titling</a> by James Arboghast for Sentinel Type. 
+						Body typeface: <a target="_blank" href="https://fonts.google.com/specimen/Roboto">Roboto</a> by Christian Robertson for Google.
+					</p>
+					<p>
+						Many thanks to everyone who has helped to make WebVR possible,
+						from the hardware teams to the browser teams, to the framework developers, and everyone in between. 
+						And a very special thanks to Lyle, Ed, Dominic, and whoever else had a hand in making 
+						<a target="_blank" href="https://en.wikipedia.org/wiki/Asteroids_(video_game)">Atari’s Asteroids (1979)</a>
+						which was a childhood favorite of mine and an obvious influence here.
+					</p>
+					<br>
+					<p>
+						Copyright © <a target="_blank" href="https://moar.io">Moar Technologies Corp</a> 2017. All Rights Reserved.
+						See <a href="https://github.com/moar-io/spacerocks" target="_blank">license</a> for details.
+					</p>
+				</section>
+			</div>
+			<footer>
+				<a target="_blank" href="https://moar.io">
+					<svg id="moar" class="svg-symbol" role="img" title="Moar Technologies Corp">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#moar"></use>
+					</svg>
+				</a><br>
+			</footer>
+		</div>
+		<h1>
+			<svg class="svg-symbol" role="img" title="Space Rocks">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/vectors.svg#space-rocks"></use>
+			</svg>
+		</h1>		
+	</body>
+</html>
