@@ -13,6 +13,10 @@ survive.
 Play [Space Rocks](https://spacerocks.moar.io "Space Rocks (WebVR)") now at 
 https://spacerocks.moar.io
 
+And read more about 
+[Space Rocks](https://spacerocks.moar.io "Space Rocks (WebVR)") on 
+[Stewart’s Medium post](https://medium.com/@stew_rtsmith/space-rocks-webvr-d4035d0ac429).
+
 
 Requirements
 ------------------------------------------------------------------------------
