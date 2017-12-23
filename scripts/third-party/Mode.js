@@ -34,34 +34,12 @@ Mode.switchTo = function( nextMode ){
 
 	if( typeof nextMode === 'string' ) nextMode = Mode.all[ nextMode ]
 	if( Mode.current && typeof Mode.current.teardown === 'function' ) Mode.current.teardown()
-	if( nextMode && typeof nextMode.setup === 'function' ) nextMode.setup()
-	Mode.current = nextMode
+	if( nextMode instanceof Mode ){
+
+		Mode.current = nextMode
+		if( typeof nextMode.setup === 'function' ) nextMode.setup()
+	}
 }
 
 
 
-
-/*
-
-
-new Mode({
-
-	name: 'attractor',
-	setup: function(){
-	
-	},
-	update: function(){
-	
-	},
-	teardown: function(){
-	
-	}
-})
-new Mode({
-
-	name: 'active'
-})
-
-
-
-*/

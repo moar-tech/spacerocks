@@ -51,6 +51,7 @@ function Bolt( controller, rotation ){
 
 	this.applyMatrix( controller.matrixWorld )
 	this.position.sub( M.three.world.getWorldPosition() )
+	this.position.add( player.velocity )//  Quick fix.
 	this.position.add( this.getWorldDirection().normalize().multiplyScalar( Bolt.length / -2 ))
 	M.three.world.add( this )
 

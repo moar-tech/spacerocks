@@ -106,7 +106,7 @@ player.arms = {
 player.setup = function(){
 
 	M.three.scene.add( player )	
-	player.hudText.position.set( 0, 0, -4 )
+	player.hudText.position.set( 0, -0.5, -5 )
 	player.add( player.hudText )
 
 
@@ -367,11 +367,6 @@ player.setup = function(){
 		arm.exhaust.positionPrior = arm.engine.localToWorld( new THREE.Vector3() ).sub( M.three.world.position )
 		M.three.world.add( arm.exhaust )
 	}
-	M.tasks.updates.add( function(){
-
-		exhaustUpdate( 'left' )
-		exhaustUpdate( 'right' )
-	})
 
 
 	//  Now that we’re done with the original we can destroy it.
@@ -435,6 +430,75 @@ player.setup = function(){
 			//arm.engine.material.emissive.setHex( player.arms.glowDim )
 		}
 	}
+
+
+
+
+	    /////////////////
+	   //             //
+	  //   Updates   //
+	 //             //
+	/////////////////
+
+
+	M.tasks.updates.add( function(){
+
+
+		//  Reaping all the benefits of VRController’s magic is as easy
+		//  as calling this one update function. It handles the rest.
+		//  https://github.com/stewdio/THREE.VRController
+
+		THREE.VRController.update()
+
+
+		//  Three’s new renderer.vr does not seem to give direct access
+		//  to the sterescopic camera rig’s position. (WTF?!)
+		//  So we’ll grab it ourselves right here.
+		//  Also important to note: This has zero effect on what you see
+		//  in the headset. The HMD is totally controlled by renderer.vr.
+		//  This is purely for being able to attach text or whatever to
+		//  the user’s face. IN YOUR FACE!
+
+		if( M.detect.vrDisplay && M.detect.vrDisplay.stageParameters && M.detect.vrDisplay.getPose ){
+		
+			const hmdPosition = M.detect.vrDisplay.getPose().position
+			if( hmdPosition ){
+			
+				player.position.fromArray( hmdPosition )			
+				player.position.applyMatrix4( new THREE.Matrix4().fromArray( M.detect.vrDisplay.stageParameters.sittingToStandingTransform ))
+				player.quaternion.fromArray( M.detect.vrDisplay.getPose().orientation )
+			}
+		}
+
+
+		//  Don’t move the user, move the world!
+
+		M.three.world.position.sub( player.velocity )
+		
+
+		//  Did we run smack into a Rock?
+		//  **** this interaction is too quick for use to understand they moved. fix UX later!! ****
+
+		if( Mode.current.name === 'game play' ){
+
+			Rock.all.forEach( function( rock ){
+
+				if( player.position.clone().sub( world.position ).distanceTo( rock.position ) <= rock.radius ){
+
+					rock.explode()
+					player.markDeath()
+					player.returnToOrigin()
+					new Explosion()
+				}
+			})
+		}
+
+
+		//  Them thar plasma engines r blazing a trail, eh?
+
+		exhaustUpdate( 'left' )
+		exhaustUpdate( 'right' )
+	})
 
 
 
@@ -606,58 +670,6 @@ player.setup = function(){
 			detatchArm( side )
 		})
 	})
-
-
-
-
-
-
-	M.tasks.updates.add( function(){
-
-
-		//  Three’s new renderer.vr does not seem to give direct access
-		//  to the sterescopic camera rig’s position. (WTF?!)
-		//  So we’ll grab it ourselves right here.
-		//  Also important to note: This has zero effect on what you see
-		//  in the headset. The HMD is totally controlled by renderer.vr.
-		//  This is purely for being able to attach text or whatever to
-		//  the user’s face. IN YOUR FACE!
-
-		if( M.detect.vrDisplay && M.detect.vrDisplay.stageParameters && M.detect.vrDisplay.getPose ){
-		
-			const hmdPosition = M.detect.vrDisplay.getPose().position
-			if( hmdPosition ){
-			
-				player.position.fromArray( hmdPosition )			
-				player.position.applyMatrix4( new THREE.Matrix4().fromArray( M.detect.vrDisplay.stageParameters.sittingToStandingTransform ))
-				player.quaternion.fromArray( M.detect.vrDisplay.getPose().orientation )
-			}
-		}
-
-
-		//  Don’t move the user, move the world!
-
-		M.three.world.position.sub( player.velocity )
-		
-
-		//  Did we run smack into a Rock?
-		//  **** this interaction is too quick for use to understand they moved. fix UX later!! ****
-
-		if( Mode.current.name === 'game play' ){
-
-			Rock.all.forEach( function( rock ){
-
-				if( player.position.clone().sub( world.position ).distanceTo( rock.position ) <= rock.radius ){
-
-					rock.explode()
-					player.markDeath()
-					player.returnToOrigin()
-					new Explosion()
-				}
-			})
-		}
-	})
-	M.tasks.updates.add( THREE.VRController.update.bind( THREE.VRController ))
 }
 
 
