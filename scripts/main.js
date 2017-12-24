@@ -158,26 +158,26 @@ function handleDetection(){
 	vrToggle = document.getElementById( 'vr-toggle-container' )
 
 	let hasErrors = false
-	if( M.detect.hasWebGL === false && document.getElementById( 'no-webgl' ).style.display !== 'block' ){
+	if( M.detect.hasWebGL === false ){
 
-		document.getElementById( 'no-webgl' ).style.display = 'block'
+		if( document.getElementById( 'no-webgl' ).style.display !== 'block' ) document.getElementById( 'no-webgl' ).style.display = 'block'
 		hasErrors = true
 	}
-	if( M.detect.hasWebVR === false && document.getElementById( 'no-webvr' ).style.display !== 'block' ){
+	if( M.detect.hasWebVR === false ){
 
-		document.getElementById( 'no-webvr' ).style.display = 'block'
+		if( document.getElementById( 'no-webvr' ).style.display !== 'block' ) document.getElementById( 'no-webvr' ).style.display = 'block'
 		hasErrors = true
 	}
-	if( M.detect.hasWebGL === true && M.detect.hasWebVR === true && document.getElementById( 'no-hmd' ).style.display !== 'block' ){
+	if( M.detect.hasWebGL === true && M.detect.hasWebVR === true ){
 
 		if( M.detect.vrDisplay instanceof VRDisplay === false ){
 
-			document.getElementById( 'no-hmd' ).style.display = 'block'
+			if( document.getElementById( 'no-hmd' ).style.display !== 'block' ) document.getElementById( 'no-hmd' ).style.display = 'block'
 			hasErrors = true
 		}
-		if( M.detect.dof < 6 && document.getElementById( 'no-6dof' ).style.display !== 'block' ){
+		if( M.detect.dof < 6 ){
 
-			document.getElementById( 'no-6dof' ).style.display = 'block'
+			if( document.getElementById( 'no-6dof' ).style.display !== 'block' ) document.getElementById( 'no-6dof' ).style.display = 'block'
 			hasErrors = true
 		}
 	}
@@ -507,7 +507,7 @@ new Mode({
 	name: 'waiting for second controller',
 	setup: function(){
 
-		player.hudText.print( 'Ok. Turn on your\nsecond controller.' )
+		player.hudText.print( 'Now press buttons on\nyour second controller.' )
 	},
 	update: function(){
 	
