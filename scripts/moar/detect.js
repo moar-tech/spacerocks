@@ -1,5 +1,5 @@
 
-//  Copyright © 2017 Moar Technologies Corp. See LICENSE for details.
+//  Copyright © 2017, 2018 Moar Technologies Corp. See LICENSE for details.
 
 
 
@@ -8,6 +8,15 @@ if( this.M === undefined ) this.M = {}
 M.detect = (function( $ ){
 
 	if( $ === undefined ) $ = {}
+
+
+
+
+	    ///////////////////
+	   //               //
+	  //   Immediate   //
+	 //               //
+	///////////////////
 
 
 	//  What sort of hardware are we running on?
@@ -34,6 +43,15 @@ M.detect = (function( $ ){
 	$.needsWebVRPolyfill = $.isMobile && !$.isTablet && !$.isAndroid && ( !$.hasWebVR )
 
 
+
+
+	    /////////////////
+	   //             //
+	  //   Delayed   //
+	 //             //
+	/////////////////
+
+
 	//  Eventually we will have a list of connected VR Displays.
 	//  This allows us to select a single one as ‘active’.
 
@@ -46,7 +64,7 @@ M.detect = (function( $ ){
 		}
 		else return false
  		$.hasExternalDisplay = !!$.vrDisplay.capabilities && $.vrDisplay.capabilities.hasExternalDisplay
-		$.dof = !$.vrDisplay.capabilities ? 0 : ( +$.vrDisplay.capabilities.hasOrientation + +$.vrDisplay.capabilities.hasPosition ) * 3
+		$.degreesOfFreedom = !$.vrDisplay.capabilities ? 0 : ( +$.vrDisplay.capabilities.hasOrientation + +$.vrDisplay.capabilities.hasPosition ) * 3
 		let displayName = $.vrDisplay.displayName
 
 
@@ -57,6 +75,7 @@ M.detect = (function( $ ){
 
 		//  Expecting "Oculus VR HMD (HMD)" or "Oculus VR HMD (Sensor)".
 		//  Note that "Rift" is NOT part of the displayName.
+		//  Unclear how this may need to change with Oculus Go.
 
 		$.isOculus = /oculus/i.test( displayName )
 
@@ -85,6 +104,12 @@ M.detect = (function( $ ){
 		//  ie. Chrome plug-in etc?
 
 		$.isEmulatedHMD = /emulat/i.test( displayName )
+
+
+		//  Though this function directly updates the M.detect object
+		//  it’s thoughtful to return the found VR display, no?
+
+		return $.vrDisplay
 	}
 
 
@@ -146,41 +171,65 @@ M.detect = (function( $ ){
 	}
 
 
-	//  Now that we have the dominoes in place it’s time to 
-	//  get a list of the connected VR Displays
-	//  and select one display from that list as ‘active’.
 
-	$.getVRDisplays( function(){
 
-		$.selectVRDisplay( 0 )
-	})
+	    /////////////////
+	   //             //
+	  //   Polling   //
+	 //             //
+	/////////////////
 
+
+	//  Ok, all the dominoes are in place now.
+	//  We cooooooould just use a Promise and do one detect for an HMD
+	//  but in my experience shit happens; hardware announces itself late
+	//  or users plug (or unplug) things.
+	//  So we’re going to do short polling instead.
+
+	let vrDisplayPrevious = null
+	const pollForDisplays = function(){
 	
-	//  x
+		$.getVRDisplays( function( vrDisplays ){
 
-	$.getVRDisplay = new Promise( function( resolve ){
+			if( $.vrDisplay !== vrDisplayPrevious ){
 
-		if( window.VRDisplay !== undefined && $.vrDisplay instanceof VRDisplay ) resolve( $.vrDisplay )
-		else if( $.vrDisplays !== undefined && $.vrDisplays.length > 0 ){
+				vrDisplayPrevious = $.selectVRDisplay()
+				window.dispatchEvent( new CustomEvent( 'vr display changed', { detail: $.vrDisplay }))
+			}
+		})
 
-			$.selectVRDisplay( 0 )
-			resolve( $.vrDisplay )
-		}
-		else {
 
-			$.getVRDisplays( function(){
+		//  Right now this polling takes too much overhead to run continuously
+		//  once we’re playing in VR. So as soon as we do find a valid VRDisplay
+		//  we’ll stop polling for them. And that’s too bad because it would be 
+		//  so rad if we could unplug one headset -- say it’s a Vive -- and then
+		//  plug in a different headset -- let’s say it’s an Oculus -- and pick
+		//  up playing where we left off without even reloading the page!
 
-				$.selectVRDisplay( 0 )
-				resolve( $.vrDisplay )
-			})
-		}
+		if( $.vrDisplay instanceof VRDisplay ) window.clearInterval( pollForDisplays )
+	}
+	M.tasks.setups.add( function(){
+
+		pollForDisplays()
+		window.setInterval( pollForDisplays, 1000 )
 	})
+
+
 
 
 	//  Package it up and send it out.
 
 	return $
 })()
+
+
+
+
+
+
+
+
+
 
 
 

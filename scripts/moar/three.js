@@ -1,5 +1,5 @@
 
-//  Copyright © 2017 Moar Technologies Corp. See LICENSE for details.
+//  Copyright © 2017, 2018 Moar Technologies Corp. See LICENSE for details.
 
 
 
@@ -26,9 +26,13 @@ M.three.setup = function(){
 	
 		renderer.vr.enabled  = true
 		renderer.vr.standing = true
-		renderer.vr.setDevice( M.detect.vrDisplay )
 	}
 	container.appendChild( renderer.domElement )
+
+	window.addEventListener( 'vr display changed', function(){
+
+		renderer.vr.setDevice( M.detect.vrDisplay )
+	})
 
 	const scene = new THREE.Scene()
 	scene.name = 'scene'

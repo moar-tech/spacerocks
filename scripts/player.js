@@ -1,5 +1,5 @@
 
-//  Copyright © 2017 Moar Technologies Corp. See LICENSE for details.
+//  Copyright © 2017, 2018 Moar Technologies Corp. See LICENSE for details.
 
 
 
@@ -528,6 +528,46 @@ player.setup = function(){
 		M.three.scene.add( controller )
 
 
+		//  Before we go further, now’s a good time to log some stats.
+
+		M.stats.note({
+			
+			hitType:       'event',
+			eventCategory: 'VR Hardware',
+			eventAction:   'Controller Name',
+			eventLabel:     controller.name,
+			nonInteraction: true
+		})
+		M.stats.note({
+	
+			hitType:       'event',
+			eventCategory: 'VR Hardware',
+			eventAction:   'Controller Degrees of Freedom',
+			eventLabel:     controller.dof,
+			nonInteraction: true
+		})
+		M.stats.note({
+	
+			hitType:       'event',
+			eventCategory: 'VR Hardware',
+			eventAction:   'Controller Haptic Actuators',
+			eventLabel:     controller.gamepad.hapticActuators ? controller.gamepad.hapticActuators.length : 0,
+			nonInteraction: true
+		})
+		M.stats.note({
+			
+			hitType:       'event',
+			eventCategory: 'VR Hardware',
+			eventAction:   'Controller Handedness',
+			eventLabel:     controller.getHandedness(),
+			nonInteraction: true
+		})
+		
+		let
+		cannonHasFired = false,
+		engineHasFired = false
+
+
 		//  Let’s setup some convenience variables, and also attach the correct
 		//  collection of Meshes, etc to this controller.
 
@@ -572,6 +612,14 @@ player.setup = function(){
 
 		controller.addEventListener( 'hand changed', function( event ){
 
+			M.stats.note({
+				
+				hitType:       'event',
+				eventCategory: 'VR Hardware',
+				eventAction:   'Controller Handedness Changed',
+				eventLabel:     side +' to '+ event.hand,
+				nonInteraction: true
+			})
 			side = event.hand
 			attachArm( side )
 		})
@@ -605,6 +653,18 @@ player.setup = function(){
 					if( engine && engine.isEnabled ){
 
 						player.velocity.add( controller.getWorldDirection().normalize().multiplyScalar( 0.0001 ))
+					}
+					if( cannonHasFired === false ){
+
+						cannonHasFired = true
+						M.stats.note({
+		
+							hitType:       'event',
+							eventCategory: 'Gameplay',
+							eventAction:   'Cannon Has Fired',
+							eventLabel:     true,
+							nonInteraction: false
+						})
 					}
 				}
 			}
@@ -648,7 +708,19 @@ player.setup = function(){
 			
 				// engine.material.color.setHex( player.arms.glowBright )
 				engine.rotationVelocity = 0.15
-				if( engineLight ) engineLight.intensity = player.arms.intensityBright			
+				if( engineLight ) engineLight.intensity = player.arms.intensityBright
+				if( engineHasFired === false ){
+
+					engineHasFired = true
+					M.stats.note({
+
+						hitType:       'event',
+						eventCategory: 'VR Hardware',
+						eventAction:   'Engine Has Fired',
+						eventLabel:     true,
+						nonInteraction: false
+					})
+				}
 			}
 		})
 		controller.addEventListener( 'grip touch ended', function(){
@@ -668,6 +740,14 @@ player.setup = function(){
 
 			M.three.scene.remove( controller )
 			detatchArm( side )
+			M.stats.note({
+
+				hitType:       'event',
+				eventCategory: 'VR Hardware',
+				eventAction:   'Controller Disconnected',
+				eventLabel:     true,
+				nonInteraction: true
+			})
 		})
 	})
 }

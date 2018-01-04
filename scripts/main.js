@@ -1,5 +1,5 @@
 
-//  Copyright © 2017 Moar Technologies Corp. See LICENSE for details.
+//  Copyright © 2017, 2018 Moar Technologies Corp. See LICENSE for details.
 
 
 
@@ -13,8 +13,8 @@
 
 const settings = {
 
-	version: 20171222.1514,
-	verbosity: 1.0,
+	version: new Date( '2018-01-03 22:22' ),
+	verbosity: 0,
 	
 
 	//  Radii in Meters.
@@ -94,32 +94,32 @@ function onVRDisplayPresentChange( event ){
 	const vrToggle = document.getElementById( 'vr-toggle-container' )
 	if( M.detect.vrDisplay.isPresenting ){
 
-		// Moar.note({
+		M.stats.note({
 		
-		// 	hitType:       'event',
-		// 	eventCategory: 'VR Session',
-		// 	eventAction:   'VR Entry',
-		// 	eventLabel:    'VR entry successful',
-		// 	nonInteraction: true
-		// })
+			hitType:       'event',
+			eventCategory: 'VR Session',
+			eventAction:   'VR Entry',
+			eventLabel:    'VR entry successful',
+			nonInteraction: true
+		})
 		vrToggle.classList.add( 'ready' )
-		Mode.switchTo( 'waiting for first controller' )
+		if( Mode.current.name !== 'game play' ) Mode.switchTo( 'waiting for first controller' )
 	}
 	else {
 
-		// Moar.note({
+		M.stats.note({
 		
-		// 	hitType:       'event',
-		// 	eventCategory: 'VR Session',
-		// 	eventAction:   'VR Exit',
-		// 	eventLabel:    'VR exit successful',
-		// 	nonInteraction: true
-		// })
+			hitType:       'event',
+			eventCategory: 'VR Session',
+			eventAction:   'VR Exit',
+			eventLabel:    'VR exit successful',
+			nonInteraction: true
+		})
 		vrToggle.classList.remove( 'engaged' )
-		Mode.switchTo( 'attractor' )
+		if( Mode.current.name !== 'game play' ) Mode.switchTo( 'attractor' )
 	}
 }
-function onVRToggle() {
+function onVRToggle(){
 
 	const 
 	d = M.detect.vrDisplay,
@@ -127,25 +127,25 @@ function onVRToggle() {
 
 	if( d.isPresenting ){
 		
-		// Moar.note({
+		M.stats.note({
 		
-		// 	hitType:       'event',
-		// 	eventCategory: 'VR Session',
-		// 	eventAction:   'VR Exit',
-		// 	eventLabel:    'VR exit attempted'
-		// })
+			hitType:       'event',
+			eventCategory: 'VR Session',
+			eventAction:   'VR Exit',
+			eventLabel:    'VR exit attempted'
+		})
 		vrToggle.classList.remove( 'ready' )
 		d.exitPresent()
 	}
 	else {
 
-		// Moar.note({
+		M.stats.note({
 		
-		// 	hitType:       'event',
-		// 	eventCategory: 'VR Session',
-		// 	eventAction:   'VR Entry',
-		// 	eventLabel:    'VR entry attempted'
-		// })
+			hitType:       'event',
+			eventCategory: 'VR Session',
+			eventAction:   'VR Entry',
+			eventLabel:    'VR entry attempted'
+		})
 		vrToggle.classList.add( 'engaged' )
 		d.requestPresent([{ source: M.three.renderer.domElement }])
 		three.classList.add( 'show' )
@@ -175,13 +175,13 @@ function handleDetection(){
 			if( document.getElementById( 'no-hmd' ).style.display !== 'block' ) document.getElementById( 'no-hmd' ).style.display = 'block'
 			hasErrors = true
 		}
-		if( M.detect.dof < 6 ){
+		if( M.detect.degreesOfFreedom < 6 ){
 
 			if( document.getElementById( 'no-6dof' ).style.display !== 'block' ) document.getElementById( 'no-6dof' ).style.display = 'block'
 			hasErrors = true
 		}
 	}
-	
+
 
 	//  Sorry, no can haz VRs.
 
@@ -321,6 +321,10 @@ new Mode({
 			}
 		})
 
+
+		//  We’re just running our detection once right here,
+		//  but we’re going to run it on a constant loop
+		//  if we make it to 'attractor' mode.
 
 		handleDetection()
 	},
@@ -473,6 +477,12 @@ new Mode({
 			}
 		}
 	},
+
+
+	//  Yes, we want to constantly check on our VR capabilities
+	//  incase some hardware is late on reporting itself
+	//  or perhaps the user plugs something in after page load, etc.
+
 	update: handleDetection
 })
 
@@ -559,9 +569,6 @@ new Mode({
 		if( Rock.all.length === 0 ){
 
 			level.create()
-			/*
-				update Jumbotron to show new level number.
-			*/
 		}
 		if( player.lives < 1 ) Mode.switchTo( 'game over' )
 	},
@@ -585,12 +592,33 @@ new Mode({
 
 	name: 'game over',
 	setup: function(){
-	
-		player.hudText.print( 'Game over' )
-		/*
-		TEXT: game over, final score, asteroids destroyed, level #
 
-		*/
+
+		//  Now that the game has ended, let’s note the player’s
+		//  final score and level achieved.
+
+		M.stats.note({
+					
+			hitType:       'event',
+			eventCategory: 'Gameplay',
+			eventAction:   'Game ended',
+			eventLabel:    'Score',
+			value:          player.score
+		
+		}, {
+					
+			hitType:       'event',
+			eventCategory: 'Gameplay',
+			eventAction:   'Game ended',
+			eventLabel:    'Level',
+			value:          level.number
+		})
+
+
+		//  Update to include final score, asteroids destroyed, level number.
+
+		player.hudText.print( 'Game over' )
+
 		const
 		position = new THREE.Vector3( 0, 1.3, -2 ),
 		button = new Button( 'Play Again', position, function(){
@@ -732,7 +760,8 @@ M.tasks.updates.add( Mode.run )
 
 const help = 
 	'\nSPACE ROCKS'+
-	'\n'+ settings.version +'\n'+
+	'\n───────────'+
+	'\nRevision '+ settings.version +'\n'+
 	'\nHi! Here are some commands you might find interesting:\n'+
 	'\n  Mode.current'+
 	'\n  Mode.all'+
