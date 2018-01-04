@@ -530,37 +530,29 @@ player.setup = function(){
 
 		//  Before we go further, now’s a good time to log some stats.
 
-		M.stats.note({
+		M.stats.note( 'Controller Name', {
 			
-			hitType:       'event',
-			eventCategory: 'VR Hardware',
-			eventAction:   'Controller Name',
-			eventLabel:     controller.name,
-			nonInteraction: true
+			event_category: 'VR Hardware',
+			event_label:     controller.name,
+			non_interaction: true
 		})
-		M.stats.note({
+		M.stats.note( 'Controller Degrees of Freedom', {
 	
-			hitType:       'event',
-			eventCategory: 'VR Hardware',
-			eventAction:   'Controller Degrees of Freedom',
-			eventLabel:     controller.dof,
-			nonInteraction: true
+			event_category: 'VR Hardware',
+			event_label:     controller.dof,
+			non_interaction: true
 		})
-		M.stats.note({
+		M.stats.note( 'Controller Haptic Actuators', {
 	
-			hitType:       'event',
-			eventCategory: 'VR Hardware',
-			eventAction:   'Controller Haptic Actuators',
-			eventLabel:     controller.gamepad.hapticActuators ? controller.gamepad.hapticActuators.length : 0,
-			nonInteraction: true
+			event_category: 'VR Hardware',
+			event_label:     controller.gamepad.hapticActuators ? controller.gamepad.hapticActuators.length : 0,
+			non_interaction: true
 		})
-		M.stats.note({
+		M.stats.note( 'Controller Handedness', {
 			
-			hitType:       'event',
-			eventCategory: 'VR Hardware',
-			eventAction:   'Controller Handedness',
-			eventLabel:     controller.getHandedness(),
-			nonInteraction: true
+			event_category: 'VR Hardware',
+			event_label:     controller.getHandedness(),
+			non_interaction: true
 		})
 		
 		let
@@ -612,13 +604,11 @@ player.setup = function(){
 
 		controller.addEventListener( 'hand changed', function( event ){
 
-			M.stats.note({
+			M.stats.note( 'Controller Handedness Changed', {
 				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'Controller Handedness Changed',
-				eventLabel:     side +' to '+ event.hand,
-				nonInteraction: true
+				event_category: 'VR Hardware',
+				event_label:     side +' to '+ event.hand,
+				non_interaction: true
 			})
 			side = event.hand
 			attachArm( side )
@@ -657,13 +647,11 @@ player.setup = function(){
 					if( cannonHasFired === false ){
 
 						cannonHasFired = true
-						M.stats.note({
+						M.stats.note( 'Cannon Has Fired', {
 		
-							hitType:       'event',
-							eventCategory: 'Gameplay',
-							eventAction:   'Cannon Has Fired',
-							eventLabel:     true,
-							nonInteraction: false
+							event_category: 'Gameplay',
+							event_label:     true,
+							non_interaction: false
 						})
 					}
 				}
@@ -712,13 +700,11 @@ player.setup = function(){
 				if( engineHasFired === false ){
 
 					engineHasFired = true
-					M.stats.note({
+					M.stats.note( 'Engine Has Fired', {
 
-						hitType:       'event',
-						eventCategory: 'VR Hardware',
-						eventAction:   'Engine Has Fired',
-						eventLabel:     true,
-						nonInteraction: false
+						event_category: 'VR Hardware',
+						event_label:     true,
+						non_interaction: false
 					})
 				}
 			}
@@ -740,13 +726,11 @@ player.setup = function(){
 
 			M.three.scene.remove( controller )
 			detatchArm( side )
-			M.stats.note({
+			M.stats.note( 'Controller Disconnected', {
 
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'Controller Disconnected',
-				eventLabel:     true,
-				nonInteraction: true
+				event_category: 'VR Hardware',
+				event_label:     true,
+				non_interaction: true
 			})
 		})
 	})

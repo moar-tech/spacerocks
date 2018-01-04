@@ -14,6 +14,7 @@ M.stats = (function(){
 	//  then limits to 1 event per second. 
 	//  https://developers.google.com/analytics/devguides/collection/gtagjs/events
 	//  https://support.google.com/analytics/answer/1033068#NonInteractionEvents
+	//  https://developers.google.com/analytics/devguides/collection/gtagjs/sending-data
 
 	let
 	noteLastSentTime = 0,
@@ -34,16 +35,12 @@ M.stats = (function(){
 	},
 	note = function(){
 
-		Array.from( arguments ).forEach( function( obj ){
-		
-			notesBuffer.push([ 'send', obj ])
-		})		
+		notesBuffer.push([ 'event', ...arguments ])
 	},
 	noteLinkHovered = function(){
 
 		notesBuffer.push([ 
 
-			'send',
 			'event',
 			'link',
 			'hover', 
@@ -55,7 +52,6 @@ M.stats = (function(){
 
 		notesBuffer.push([
 
-			'send',
 			'event',
 			'link',
 			'followed',
@@ -102,7 +98,7 @@ M.stats = (function(){
 
 		note,
 		noteLinkHovered,
-		noteLinkHovered
+		noteLinkFollowed
 	}
 })()
 
@@ -114,21 +110,17 @@ M.tasks.setups.add( function(){
 
 	//  We can track some abilities straight away.
 
-	M.stats.note({
+	M.stats.note( 'has WebGL?', {
 		
-		hitType:       'event',
-		eventCategory: 'APIs',
-		eventAction:   'has WebGL',
-		eventLabel:     M.detect.hasWebGL,
-		nonInteraction: true
-	
-	}, {
+		event_category: 'APIs',
+		event_label:     M.detect.hasWebGL,
+		non_interaction: true
+	})
+	M.stats.note( 'has WebVR?', {
 		
-		hitType:       'event',
-		eventCategory: 'APIs',
-		eventAction:   'has WebVR',
-		eventLabel:     M.detect.hasWebVR,
-		nonInteraction: true
+		event_category: 'APIs',
+		event_label:     M.detect.hasWebVR,
+		non_interaction: true
 	})
 
 
@@ -139,48 +131,38 @@ M.tasks.setups.add( function(){
 
 		if( M.detect.vrDisplay instanceof VRDisplay ){
 
-			M.stats.note({
+			M.stats.note( 'HMD Connected?', {
 				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'HMD Connected?',
-				eventLabel:     true,
-				nonInteraction: true
-			
-			}, {
+				event_category: 'VR Hardware',
+				event_label:     true,
+				non_interaction: true
+			})
+			M.stats.note( 'HMD Name', {
 				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'HMD Name',
-				eventLabel:     M.detect.vrDisplay.displayName,
-				nonInteraction: true
-			
-			}, {
+				event_category: 'VR Hardware',
+				event_label:     M.detect.vrDisplay.displayName,
+				non_interaction: true
+			})
+			M.stats.note( 'HMD Degrees of Freedom', {
 				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'HMD Degrees of Freedom',
-				eventLabel:     M.detect.degreesOfFreedom,
-				nonInteraction: true
-			
-			}, {
-				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'HMD has External Display?',
-				eventLabel:     M.detect.hasExternalDisplay,
-				nonInteraction: true
+				event_category: 'VR Hardware',
+				event_label:     M.detect.degreesOfFreedom,
+				non_interaction: true
+			})
+			M.stats.note( 'HMD has External Display?', {
+
+				event_category: 'VR Hardware',
+				event_label:     M.detect.hasExternalDisplay,
+				non_interaction: true
 			})
 		}
 		else {
 
-			M.stats.note({
+			M.stats.note( 'HMD exists?', {
 				
-				hitType:       'event',
-				eventCategory: 'VR Hardware',
-				eventAction:   'HMD exists?',
-				eventLabel:     false,
-				nonInteraction: true
+				event_category: 'VR Hardware',
+				event_label:     false,
+				non_interaction: true
 			})
 		}
 	})
@@ -194,21 +176,17 @@ M.tasks.setups.add( function(){
 
 		if( Mode.current === 'game play' ){
 		
-			M.stats.note({
+			M.stats.note( 'Game aborted', {
 						
-				hitType:       'event',
-				eventCategory: 'Gameplay',
-				eventAction:   'Game aborted',
-				eventLabel:    'Score',
-				value:          player.score
-			
-			}, {
+				event_category: 'Gameplay',
+				event_label:    'Score',
+				value:           player.score
+			})
+			M.stats.note( 'Game aborted', {
 						
-				hitType:       'event',
-				eventCategory: 'Gameplay',
-				eventAction:   'Game aborted',
-				eventLabel:    'Level',
-				value:          level.number
+				event_category: 'Gameplay',
+				event_label:    'Level',
+				value:           level.number
 			})
 		}
 	})

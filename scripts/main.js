@@ -13,7 +13,7 @@
 
 const settings = {
 
-	version: new Date( '2018-01-03 22:22' ),
+	version: new Date( '2018-01-04 00:55' ),
 	verbosity: 0,
 	
 
@@ -94,26 +94,22 @@ function onVRDisplayPresentChange( event ){
 	const vrToggle = document.getElementById( 'vr-toggle-container' )
 	if( M.detect.vrDisplay.isPresenting ){
 
-		M.stats.note({
+		M.stats.note( 'VR Entry', {
 		
-			hitType:       'event',
-			eventCategory: 'VR Session',
-			eventAction:   'VR Entry',
-			eventLabel:    'VR entry successful',
-			nonInteraction: true
+			event_category: 'VR Session',
+			event_label:    'VR entry successful',
+			non_interaction: true
 		})
 		vrToggle.classList.add( 'ready' )
 		if( Mode.current.name !== 'game play' ) Mode.switchTo( 'waiting for first controller' )
 	}
 	else {
 
-		M.stats.note({
+		M.stats.note( 'VR Exit', {
 		
-			hitType:       'event',
-			eventCategory: 'VR Session',
-			eventAction:   'VR Exit',
-			eventLabel:    'VR exit successful',
-			nonInteraction: true
+			event_category: 'VR Session',
+			event_label:    'VR exit successful',
+			non_interaction: true
 		})
 		vrToggle.classList.remove( 'engaged' )
 		if( Mode.current.name !== 'game play' ) Mode.switchTo( 'attractor' )
@@ -127,24 +123,22 @@ function onVRToggle(){
 
 	if( d.isPresenting ){
 		
-		M.stats.note({
+		M.stats.note( 'VR Exit', {
 		
-			hitType:       'event',
-			eventCategory: 'VR Session',
-			eventAction:   'VR Exit',
-			eventLabel:    'VR exit attempted'
+			event_category: 'VR Session',
+			event_label:    'VR exit attempted',
+			non_interaction: false
 		})
 		vrToggle.classList.remove( 'ready' )
 		d.exitPresent()
 	}
 	else {
 
-		M.stats.note({
+		M.stats.note( 'VR Entry', {
 		
-			hitType:       'event',
-			eventCategory: 'VR Session',
-			eventAction:   'VR Entry',
-			eventLabel:    'VR entry attempted'
+			event_category: 'VR Session',
+			event_label:    'VR entry attempted',
+			non_interaction: false
 		})
 		vrToggle.classList.add( 'engaged' )
 		d.requestPresent([{ source: M.three.renderer.domElement }])
@@ -575,6 +569,27 @@ new Mode({
 	teardown: function(){
 	
 		player.disableEngines()
+
+
+		//  Now that the game has ended, let’s note the player’s
+		//  final score and level achieved.
+		//  Why do this here instead of the 'game over' Mode?
+		//  Player may also have hit EXIT VR button which would
+		//  land them in attractor mode instead.
+
+		M.stats.note( 'Game ended', {
+			
+			event_category: 'Gameplay',
+			event_label:    'Score',
+			value:           player.score
+		})
+		M.stats.note( 'Game ended', {
+			
+			event_category: 'Gameplay',
+			event_label:    'Level',
+			value:           level.number
+		})
+
 	}
 })
 
@@ -592,27 +607,6 @@ new Mode({
 
 	name: 'game over',
 	setup: function(){
-
-
-		//  Now that the game has ended, let’s note the player’s
-		//  final score and level achieved.
-
-		M.stats.note({
-					
-			hitType:       'event',
-			eventCategory: 'Gameplay',
-			eventAction:   'Game ended',
-			eventLabel:    'Score',
-			value:          player.score
-		
-		}, {
-					
-			hitType:       'event',
-			eventCategory: 'Gameplay',
-			eventAction:   'Game ended',
-			eventLabel:    'Level',
-			value:          level.number
-		})
 
 
 		//  Update to include final score, asteroids destroyed, level number.
