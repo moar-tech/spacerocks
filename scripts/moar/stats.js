@@ -131,7 +131,7 @@ M.tasks.setups.add( function(){
 
 		if( M.detect.vrDisplay instanceof VRDisplay ){
 
-			M.stats.note( 'HMD Connected?', {
+			M.stats.note( 'HMD is Connected?', {
 				
 				event_category: 'VR Hardware',
 				event_label:     true,
@@ -158,7 +158,7 @@ M.tasks.setups.add( function(){
 		}
 		else {
 
-			M.stats.note( 'HMD exists?', {
+			M.stats.note( 'HMD is Connected?', {
 				
 				event_category: 'VR Hardware',
 				event_label:     false,

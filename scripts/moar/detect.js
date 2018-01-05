@@ -224,12 +224,3 @@ M.detect = (function( $ ){
 
 
 
-
-
-
-
-
-
-
-
-

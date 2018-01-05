@@ -73,7 +73,7 @@ had a hand in making
 [Atari’s Asteroids (1979)](https://en.wikipedia.org/wiki/Asteroids_(video_game))
 which was a childhood favorite of mine and an obvious influence here.
 
-Copyright © [Moar Technologies Corp](https://moar.io) 2017.
+Copyright © [Moar Technologies Corp](https://moar.io) 2017, 2018.
 All Rights Reserved. See license for details.
 
 

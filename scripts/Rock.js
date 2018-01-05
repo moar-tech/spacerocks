@@ -1,5 +1,5 @@
 
-//  Copyright © 2017 Moar Technologies Corp. See LICENSE for details.
+//  Copyright © 2017, 2018 Moar Technologies Corp. See LICENSE for details.
 
 
 
@@ -202,7 +202,10 @@ Rock.LARGE = {
 	geometries: Rock.makeGeometries( new THREE.IcosahedronGeometry( 6, 2 ))
 }
 Rock.STYLES = [  Rock.SMALL, Rock.MEDIUM, Rock.LARGE ]
-Rock.MATERIAL = new THREE.MeshPhongMaterial()
+Rock.MATERIAL = new THREE.MeshPhongMaterial({
+
+	shininess: 100
+})
 Rock.MATERIAL.flatShading = true
 
 

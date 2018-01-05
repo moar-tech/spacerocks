@@ -647,7 +647,7 @@ player.setup = function(){
 					if( cannonHasFired === false ){
 
 						cannonHasFired = true
-						M.stats.note( 'Cannon Has Fired', {
+						M.stats.note( 'Cannon Has Fired?', {
 		
 							event_category: 'Gameplay',
 							event_label:     true,
@@ -700,9 +700,9 @@ player.setup = function(){
 				if( engineHasFired === false ){
 
 					engineHasFired = true
-					M.stats.note( 'Engine Has Fired', {
+					M.stats.note( 'Engine Has Fired?', {
 
-						event_category: 'VR Hardware',
+						event_category: 'Gameplay',
 						event_label:     true,
 						non_interaction: false
 					})

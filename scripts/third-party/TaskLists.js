@@ -1,5 +1,5 @@
 
-//  Copyright © 2016, 2017 Stewart Smith. See LICENSE for details.
+//  Copyright © 2016–2018 Stewart Smith. See LICENSE for details.
 
 
 
