@@ -129,7 +129,7 @@ M.tasks.setups.add( function(){
 
 	window.addEventListener( 'vr display changed', function(){
 
-		if( M.detect.vrDisplay instanceof VRDisplay ){
+		if( M.detect.hasWebVR && M.detect.vrDisplay instanceof VRDisplay ){
 
 			M.stats.note( 'HMD is Connected?', {
 				

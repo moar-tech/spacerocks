@@ -210,8 +210,11 @@ M.detect = (function( $ ){
 	}
 	M.tasks.setups.add( function(){
 
-		pollForDisplays()
-		window.setInterval( pollForDisplays, 1000 )
+		if( $.hasWebVR ){
+
+			pollForDisplays()
+			window.setInterval( pollForDisplays, 1000 )
+		}
 	})
 
 
