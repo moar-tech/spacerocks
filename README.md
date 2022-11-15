@@ -22,7 +22,7 @@ Requirements
 ------------------------------------------------------------------------------
 You’ll need a position-tracking virtual reality rig with two hand controllers,
 and a WebVR-capable browser. Right now in 2017 the most expensive part is the 
-computer needed to run a room-scale VR rig, but take heart—by 2022 all of this
+computer needed to run a room-scale VR rig, but take heart—by ~~2022~~ 2027 all of this
 hardware will be much cheaper. And the Web will still be free. In the meantime
 here’s what Space Rocks is tuned to run on:
 
